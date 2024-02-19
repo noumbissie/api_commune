@@ -1,0 +1,71 @@
+# Use postgres/example user/password credentials
+version: '3.9'
+
+services:
+
+  db:
+    image: postgres
+    restart: always
+    shm_size: 128mb
+    ports:
+      - 5433:5432
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=commune
+    volumes:
+      - /home/tietcheu/Documents/BDD/data:/var/lib/postgresql/data
+
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=pgadmin4@pgadmin.org
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "5051:80"
+    depends_on:
+      - db
+
+
+  # nominatim:
+  #   image: mediagis/nominatim:latest
+  #   restart: always
+  #   volumes:
+  #     - ./nominatim-data:/var/lib/postgresql/data
+  #   environment:
+  #     INIT_DB: "1"
+  #     PBF_URL: "https://download.geofabrik.de/europe/france-latest.osm.pbf"
+    
+  api-web:
+    build: 
+      context: ../../src
+    image: api_commune:latest
+    ports:
+      - "8085:80"
+    depends_on:
+      - db
+
+  nominatim:
+    container_name: nominatim
+    image: mediagis/nominatim:4.3
+    ports:
+      - "8086:8080"
+    environment:
+            # see https://github.com/mediagis/nominatim-docker/tree/master/4.3#configuration for more options
+      PBF_URL: https://download.geofabrik.de/europe/france-140101.osm.pbf
+      EPLICATION_URL: https://download.geofabrik.de/europe/france-updates/
+      NOMINATIM_PASSWORD: very_secure_password
+    volumes:
+      - nominatim-data:/var/lib/postgresql/14/main
+    shm_size: 1gb
+
+volumes:
+    nominatim-data:

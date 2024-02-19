@@ -1,0 +1,9 @@
+fastapi
+fastapi-sqlalchemy
+pydantic
+sqlalchemy
+alembic
+psycopg2
+uvicorn
+black 
+folium
