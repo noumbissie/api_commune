@@ -38,7 +38,7 @@ L'idée du projet est de charger les données des communes dans une base de donn
 
 Importation et gestion des données :
 
-· Envoie des données dans la base
+· Envoyer des données dans la base
 
 
 ![Importer les données](./Images/enregistrementbd.png "Description de la capture d'écran 1")
@@ -46,7 +46,7 @@ Importation et gestion des données :
 
 ## Méthodes du FastAPI 
 
-· Pousser / Mettre à jour une commune, son code postal et son département dans ta BDD
+· Mettre à jour une commune, son code postal et son département dans la BDD
 ![Importer les données](./Images/update_commune.png "Description de la capture d'écran 1")
 
 
@@ -61,7 +61,7 @@ Importation et gestion des données :
 
 
 
-· calcul les coordonnées GPS des communes. 
+· calculer les coordonnées GPS des communes. 
 
 
 ![Importer les données](./Images/gps_coord.png " le calcul des coordonnés gps se fait avec le nom de la commune ainsi que le lien vers le mappers dockerisé")
