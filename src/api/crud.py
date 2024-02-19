@@ -13,7 +13,7 @@ from schemas import Commune as CommuneSchemas
 from sqlalchemy import update, delete
 
 
-#Cette fonction permet de rajouter les données dans la base de données
+#Cette fonction permet de rajouter une commune dans la base de données
 def create_commune(db:Session, commune:CommuneCreate):
 
     db_commune =Commune(**commune.dict())
@@ -28,7 +28,7 @@ def create_commune(db:Session, commune:CommuneCreate):
 
 
 
-# Cette fonction retrourne un liste de commune allant du skip à limit 
+# Cette fonction retourne un liste de commune allant du skip à limit 
 def get_list_communes(db:Session, skip: int, limit:int= 100):
     
     if db.query(Commune).offset(skip).limit(limit).all():
@@ -41,7 +41,7 @@ def get_list_communes(db:Session, skip: int, limit:int= 100):
 
 
 
-#Retourner l'information d'une commune à partir de son nom
+#Retourne l'information d'une commune à partir de son nom
 def get_commune_by_name(db: Session, nom_commune : str):
     
     db_commune = db.query(Commune).filter(Commune.nom_commune == nom_commune.upper()).first()
@@ -69,7 +69,7 @@ def get_listCommune_by_dept(db: Session, departement : str):
 
 
 
-#Permet de mettre à jour une commune dans la base , on en profite pour passer les valeurs de la longitude et de la latitude 
+#Permet de mettre à jour une commune dans la base , son code_postal et son departement
 def update_commune(db: Session, commune : CommuneBase ):
     
     print(commune)
@@ -93,23 +93,22 @@ def update_commune(db: Session, commune : CommuneBase ):
 
 def delete_commune(nom_commune :str, db:Session):
     
-    commune = db.query(Commune).filter(Commune.nom_commune == nom_commune)
+    commune = db.query(Commune).filter(Commune.nom_commune == nom_commune.upper())
     
     if commune :
         
         commune.delete(synchronize_session = False)
         
         db.commit()
-        db.refresh()
         
-        return{"message": "la commune  {commune.nom_commune}  a été supprimée"}
+        return{"message":f"la commune  {nom_commune}  a été supprimée"}
     
     else :
         raise HTTPException(status_code=500, detail="Impossible de supprimer cette commune ")
     
 
 
-# cette permet de charger recuperer les données a partir d'une url 
+# cette fonction permet de charger et recuperer les données à partir d'une url 
 def data_commune(url_file):
     
     resp = requests.get(url_file)
@@ -137,7 +136,7 @@ def data_commune(url_file):
     return extracted_data
 
 
-
+#cette fonction retourne les coordonées gps d'une commune à travers son nom et le lien vers un mappeur dockerisé
 
 def get_gps(commune : str, url_map = "https://nominatim.openstreetmap.org"):
     
@@ -146,8 +145,7 @@ def get_gps(commune : str, url_map = "https://nominatim.openstreetmap.org"):
         "format": "json",
         "limit": 1
     }
-    
-    
+     
     response = requests.get(url_map, params=params)
     
     if response.status_code == 200:
@@ -159,12 +157,6 @@ def get_gps(commune : str, url_map = "https://nominatim.openstreetmap.org"):
             latitude = (data[0]["lat"])
             
             longitude = (data[0]["lon"])
-             
-            # nom_commune  = folium.Map(location = [latitude, longitude], zoom_start = 12)
-            
-            #marqueur = folium.Marker([latitude, longitude], popup = commune.upper()).add_to(nom_commune)
-            
-
             
             return {"latitude" :latitude, "longitude":  longitude}
         

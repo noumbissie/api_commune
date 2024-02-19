@@ -16,7 +16,7 @@ app = FastAPI()
 
 
 
-
+#cette fonction permet d'ouvrir une session pour nos requetes ds la base de donnée
 def get_db():
     
     db = SessionLocal()
@@ -66,9 +66,6 @@ async def read_list_communes(skip: int = 0, limit: int = 100, db: Session = Depe
    
 
 
-
-
-
 @app.get(f"/api/v{version}/commune/liste_commune_par_departement", response_model=list[schemas.Commune])
 async def read_commune_dept(department: str, db: Session = Depends(get_db)):
 
@@ -107,7 +104,7 @@ async def delete_commune_(nom_commune :str, db: Session = Depends(get_db)):
     
     if crud.delete_commune(nom_commune , db):
         
-        return {"message": "la commune {nom_commune} a été supprimée"}
+        return {"message": f"la commune {nom_commune} a été supprimée"}
 
 
 
