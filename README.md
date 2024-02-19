@@ -47,6 +47,7 @@ Importation et gestion des données :
 ## Méthodes du FastAPI 
 
 · Mettre à jour une commune, son code postal et son département dans la BDD.
+
 ![Importer les données](./Images/update_commune.png "Description de la capture d'écran 1")
 
 
@@ -60,8 +61,8 @@ Importation et gestion des données :
 ![Importer les données](./Images/liste_commune_dept.png "Description de la capture d'écran 1")
 
 
-
 · calculer les coordonnées GPS d'une commune. 
+
 
 
 ![Importer les données](./Images/gps_coord.png " le calcul des coordonnés gps se fait avec le nom de la commune ainsi que le lien vers le mappers dockerisé")
