@@ -7,6 +7,7 @@ from database import SessionLocal, engine
 models.Base.metadata.create_all(bind=engine)
 version = 0.1
 
+url = "http://nominatim:8086"
 
 #url_file ="https://www.data.gouv.fr/fr/datasets/r/dbe8a621-a9c4-4bc3-9cae-be1699c5ff25"
 
@@ -39,8 +40,10 @@ async def create_commune(url: str, db: Session = Depends(get_db)):
     rows = []
 
     for row in reader:
+        
+        coord_gps = crud.get_gps(commune=row.get('nom_commune_complet'),url_map=url)
 
-        commune = schemas.CommuneCreate(code_postal=row.get("code_postal"), nom_commune=row.get('nom_commune_complet').upper(), departement = row.get("code_postal")[:2])
+        commune = schemas.CommuneCreate(code_postal=row.get("code_postal"), nom_commune=row.get('nom_commune_complet').upper(), departement = row.get("code_postal")[:2],longitude=coord_gps['longitude'],latitude=coord_gps['latitude'])
 
         rows.append(crud.create_commune(db, commune = commune))
     

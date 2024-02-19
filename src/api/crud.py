@@ -12,7 +12,6 @@ from schemas import Commune as CommuneSchemas
 
 from sqlalchemy import update, delete
 
-import folium
 
 #Cette fonction permet de rajouter les données dans la base de données
 def create_commune(db:Session, commune:CommuneCreate):
@@ -137,14 +136,14 @@ def data_commune(url_file):
 
 
 
-def get_gps(commune : str):
+def get_gps(commune : str, url_map = "https://nominatim.openstreetmap.org"):
     
     params = {
         "q": commune,
         "format": "json",
         "limit": 1
     }
-    url_map = "https://nominatim.openstreetmap.org"
+    
     
     response = requests.get(url_map, params=params)
     
@@ -164,7 +163,7 @@ def get_gps(commune : str):
             
 
             
-            return {"latitude:" :latitude, "longitude:":  longitude}
+            return {"latitude" :latitude, "longitude":  longitude}
         
         else:
             raise HTTPException(status_code=404, detail="Commune introuvable ! ")
