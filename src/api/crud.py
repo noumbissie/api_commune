@@ -44,9 +44,11 @@ def get_list_communes(db:Session, skip: int, limit:int= 100):
 #Retourner l'information d'une commune à partir de son nom
 def get_commune_by_name(db: Session, nom_commune : str):
     
-    if db.query(Commune).filter(Commune.nom_commune == nom_commune).first():
+    db_commune = db.query(Commune).filter(Commune.nom_commune == nom_commune.upper()).first()
+    
+    if db_commune:
         
-        return db.query(Commune).filter(Commune.nom_commune == nom_commune).first()
+        return db_commune
  
     else:
         
@@ -68,10 +70,11 @@ def get_listCommune_by_dept(db: Session, departement : str):
 
 
 #Permet de mettre à jour une commune dans la base , on en profite pour passer les valeurs de la longitude et de la latitude 
-def update_commune(db: Session, commune : CommuneCreate ):
+def update_commune(db: Session, commune : CommuneBase ):
     
+    print(commune)
     updated_commune = db.query(Commune).filter(Commune.nom_commune == commune.nom_commune)
-    
+    print(updated_commune.first())
     if updated_commune.first():
         
         updated_commune.update(commune.dict(), synchronize_session = False)

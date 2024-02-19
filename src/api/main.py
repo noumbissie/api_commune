@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 import csv, requests
 import crud, models, schemas
 from database import SessionLocal, engine
+from fastapi.responses import FileResponse
 
 models.Base.metadata.create_all(bind=engine)
 version = 0.1
@@ -23,6 +24,12 @@ def get_db():
         yield db
     finally:
         db.close() 
+
+
+@app.get("/")
+async def welcome():
+    
+    return FileResponse("welcome.html")
 
 
 
@@ -52,7 +59,7 @@ async def create_commune(url: str, db: Session = Depends(get_db)):
 
 
 
-@app.get(f"/api/v{version}/commune/liste_des_communes/", response_model=list[schemas.Commune])
+@app.get(f"/api/v{version}/commune/liste_des_communes", response_model=list[schemas.Commune])
 async def read_list_communes(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 
    return crud.get_list_communes(db, skip=skip, limit=limit)
@@ -70,7 +77,7 @@ async def read_commune_dept(department: str, db: Session = Depends(get_db)):
 
 
 
-@app.get(f"/api/v{version}/commune", response_model=schemas.Commune)
+@app.get(f"/api/v{version}/commune/recherche_par_nom", response_model=schemas.Commune)
 
 async def read_commune_name(nom_commune: str, db: Session = Depends(get_db)):
 
@@ -79,21 +86,22 @@ async def read_commune_name(nom_commune: str, db: Session = Depends(get_db)):
 
 
 
-@app.put(f"/api/v{version}/commune/update_commune/")  
+@app.put(f"/api/v{version}/commune/update")  
 
-async def update_commune_( commune : schemas.CommuneCreate, db: Session = Depends(get_db)):
+async def update_commune_( commune : schemas.CommuneBase, db: Session = Depends(get_db)):
   
-   if crud.update_commune(db, commune ):
+    commune.nom_commune = commune.nom_commune.upper()
+  
+    if crud.update_commune(db, commune ):
        
        return {"message": f"la commune de {commune.nom_commune} a été mise à jour !"}
-        
+   
+    return {"message": f"la commune de {commune.nom_commune} n'a pas été mise à jour !"}
+       
 
 
 
-
-
-
-@app.delete(f"/api/v{version}/commune/delete_commune/")
+@app.delete(f"/api/v{version}/commune/delete")
 
 async def delete_commune_(nom_commune :str, db: Session = Depends(get_db)):
     
@@ -104,14 +112,9 @@ async def delete_commune_(nom_commune :str, db: Session = Depends(get_db)):
 
 
 
-@app.get("/")
-async def welcome():
-    
-    return{"message": "Gestion des données de commune, Bienvenue"}
 
-
-@app.get("/gps_commune/")
-async def get_gps_parameters(commune :str):
+@app.get(f"/api/v{version}/commune/coordonéees_gps")
+async def get_gps_parameters(nom_commune :str, url_map = "https://nominatim.openstreetmap.org"):
     
-    return crud.get_gps(commune)
+    return crud.get_gps(nom_commune, url_map)
     
