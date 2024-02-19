@@ -5,7 +5,7 @@ L'idée du projet est de charger les données des communes dans une base de donn
 
 ## Docker / Docker-compose:
 
-· Un container avec FastAPI
+· Nous avons un container avec fastapi ici api-web.
 
 ```bash
     api-web:
@@ -18,7 +18,7 @@ L'idée du projet est de charger les données des communes dans une base de donn
         - db
 ```
 
-· Un container avec un gestionnaire de BDD au choix
+· Un container avec un gestionnaire de BDD au choix, ici postgresql.
 
 ```bash
     db:
@@ -38,7 +38,7 @@ L'idée du projet est de charger les données des communes dans une base de donn
 
 Importation et gestion des données :
 
-· Envoie des données dans la base
+· Envoyer des données dans la base à partir d'une url, ici nous avons cette url  [données des communes](https://www.data.gouv.fr/fr/datasets/r/dbe8a621-a9c4-4bc3-9cae-be1699c5ff25).
 
 
 ![Importer les données](./Images/enregistrementbd.png "Description de la capture d'écran 1")
@@ -46,29 +46,29 @@ Importation et gestion des données :
 
 ## Méthodes du FastAPI 
 
-· Pousser / Mettre à jour une commune, son code postal et son département dans ta BDD
+· Mettre à jour une commune, son code postal et son département dans la BDD.
 ![Importer les données](./Images/update_commune.png "Description de la capture d'écran 1")
 
 
-· Récupérer les informations d'une commune sur la base de son nom
+· Récupérer les informations d'une commune sur la base de son nom.
 
 ![Importer les données](./Images/commune_nom.png "Description de la capture d'écran 1")
 
 
-· Récupérer la liste de toutes les communes d'un département
+· Récupérer la liste de toutes les communes d'un département.
 
 ![Importer les données](./Images/liste_commune_dept.png "Description de la capture d'écran 1")
 
 
 
-· calcul les coordonnées GPS des communes. 
+· calculer les coordonnées GPS d'une commune. 
 
 
 ![Importer les données](./Images/gps_coord.png " le calcul des coordonnés gps se fait avec le nom de la commune ainsi que le lien vers le mappers dockerisé")
 
 . mapper open-source dockerisé 
 
-le mapper "nominatim" permet est un exemple de mapper dockerisé (il permet de retourner les coordonnées gps d'une commune )
+le mapper "nominatim" est un exemple de mapper dockerisé (il permet de retourner les coordonnées gps d'une commune ).
 
 ```bash
     nominatim:
@@ -109,17 +109,17 @@ le mapper "nominatim" permet est un exemple de mapper dockerisé (il permet de r
 
 ## Utilisation
 
-1. Lancer l'application :
+1. Lancer l'application dockerisée :
 
 ```bash
     docker compose build
     docker compose up
 
 ```
-Vous devez avoir cette image d'acceuil !
+Vous devrez normalement avoir cette image d'acceuil !
 ![Importer les données](./Images/capture_acceuil.png " le calcul des coordonnés gps se fait avec le nom de la commune ainsi que le lien vers le mappers dockerisé")
 
-Vous aurez egalement cette image dans la parti documentation de l'api
+Vous aurez egalement cette image dans la partie documentation de l'api
 
 ![Importer les données](./Images/page_doc.png " le calcul des coordonnés gps se fait avec le nom de la commune ainsi que le lien vers le mappers dockerisé")
 
